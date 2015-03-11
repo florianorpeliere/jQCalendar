@@ -10,20 +10,49 @@
 
 <body ng-app>
 
+  <label for="from">From</label>
+  <input type="text" id="from" name="from">
+  <label for="to">to</label>
+  <input type="text" id="to" name="to">
+  <button id="reserv">Add reservation</button>
+
    <div class="datepicker"></div>
 
 
    <script src="bower_components/jquery/dist/jquery.js"></script>
-   <script src="bower_components/jquery-ui/ui/datepicker.js"></script>
+   <script src="datepicker.js"></script>
    <script src="bower_components/angular/angular.js"></script>
    <script src="app.js"></script>
    <script>
+
+   $("#reserv").click(function(){
+     var begin = $( "#from" ).datepicker("getDate");
+     var end = $( "#to" ).datepicker("getDate");
+     $(".datepicker").datepicker("setDate", begin);
+   });
+
+   $( "#from" ).datepicker({
+    defaultDate: "+1w",
+    changeMonth: true,
+    numberOfMonths: 1,
+    onClose: function( selectedDate ) {
+      $( "#to" ).datepicker( "option", "minDate", selectedDate );
+    }
+  });
+
+  $( "#to" ).datepicker({
+    defaultDate: "+1w",
+    changeMonth: true,
+    numberOfMonths: 1,
+    onClose: function( selectedDate ) {
+      $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+    }
+  });
+
+
       $(function() {
          $(".datepicker").datepicker({
-            numberOfMonths: 12
-         }).children().css({
-            display: "flex",
-            "flex-wrap": "wrap"
+            numberOfMonths: 1
          });
       });
    </script>

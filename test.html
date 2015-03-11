@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Document</title>
+   <link rel="stylesheet" href="test.css">
+</head>
+
+<body>
+   <div data-id="1" style="background-color: blue">1</div>
+   <div data-id="2" style="background-color: red">2</div>
+   <div data-id="3" style="background-color: yellow">3</div>
+   <div data-id="4" style="background-color: pink">4</div>
+   <div data-id="5" style="background-color: purple">5</div>
+</body>
+
+<script>
+   var divs = document.querySelector("body");
+   var targetBegin;
+   var targetEnd;
+   var oldEnd;
+   var element;
+
+   function colorizeElement() {
+      console.log(targetBegin.innerHTML + ' -> ' + targetEnd.innerHTML);
+      for (var i = +targetBegin.dataset.id, x = +targetEnd.dataset.id; i <= x; i++) {
+         element = document.querySelector('*[data-id="' + i + '"]');
+         element.style["background-color"] = "black";
+         element.style.opacity = "1";
+      }
+   }
+
+   function colorizeOverElement() {
+      console.log(targetBegin.innerHTML + ' -> ' + targetEnd.innerHTML);
+      if (oldEnd) {
+         for (var i = +targetBegin.dataset.id, x = +oldEnd.dataset.id; i <= x; i++) {
+            document.querySelector('*[data-id="' + i + '"]').style.opacity = "1";
+         }
+      }
+      for (var i = +targetBegin.dataset.id, x = +targetEnd.dataset.id; i <= x; i++) {
+         document.querySelector('*[data-id="' + i + '"]').style.opacity = "0.5";
+      }
+      oldEnd = targetEnd;
+   }
+
+   divs.addEventListener("mouseup", function(event) {
+      if (event.target !== event.currentTarget) {
+         targetEnd = event.target;
+         colorizeElement();
+      }
+      divs.removeEventListener('mouseover', mouseOver);
+      event.stopPropagation();
+   });
+
+   divs.addEventListener("mousedown", function(event) {
+      if (event.target !== event.currentTarget) {
+         targetBegin = event.target;
+         divs.addEventListener("mouseover", mouseOver);
+      }
+      event.stopPropagation();
+   });
+
+   function mouseOver(event) {
+      if (event.target !== event.currentTarget) {
+         console.log("Mouse Over : " + event.target.innerHTML);
+         targetEnd = event.target;
+         colorizeOverElement();
+      }
+      event.stopPropagation();
+   }
+</script>
+
+</html>

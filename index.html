@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+   <meta charset="UTF-8">
+   <title>jQueryDatepicker</title>
+   <link rel="stylesheet" href="bower_components/jquery-ui/themes/black-tie/jquery-ui.css">
+   <link rel="stylesheet" href="app.css">
+</head>
+
+<body ng-app>
+
+   <div class="datepicker"></div>
+
+
+   <script src="bower_components/jquery/dist/jquery.js"></script>
+   <script src="bower_components/jquery-ui/ui/datepicker.js"></script>
+   <script src="bower_components/angular/angular.js"></script>
+   <script src="app.js"></script>
+   <script>
+      $(function() {
+         $(".datepicker").datepicker({
+            numberOfMonths: 12
+         }).children().css({
+            display: "flex",
+            "flex-wrap": "wrap"
+         });
+      });
+   </script>
+</body>
+
+</html>

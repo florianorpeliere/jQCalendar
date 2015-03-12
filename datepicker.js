@@ -1984,9 +1984,6 @@
                                     else if (printDate.getTime() === element.end.getTime()) {
                                        return " end-" + element.type + " ";
                                     }
-                                    else {
-                                       return "";
-                                    }
                                  }
                                  return "";
                               })() +

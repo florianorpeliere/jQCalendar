@@ -10,13 +10,13 @@
 
 <body ng-app>
 
-  <label for="from">From</label>
-  <input type="text" id="from" name="from">
-  <label for="to">to</label>
-  <input type="text" id="to" name="to">
-  <button id="reserv">Add reservation</button>
+   <label for="from">From</label>
+   <input type="text" id="from" name="from">
+   <label for="to">to</label>
+   <input type="text" id="to" name="to">
+   <button id="reserv">Add reservation</button>
 
-   <div class="datepicker"></div>
+   <div id="datepicker"></div>
 
 
    <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -24,36 +24,48 @@
    <script src="bower_components/angular/angular.js"></script>
    <script src="app.js"></script>
    <script>
+      //Faire une réservation
+      $('#reserv').click(function() {
+         //Get begin and end of the reservation
+         var begin = $('#from').datepicker('getDate');
+         var end = $('#to').datepicker('getDate');
+         //Modify the main datepicker and add this reservation
+         $('#datepicker').datepicker('addRange', begin, end, 'reservation');
 
-   $("#reserv").click(function(){
-     var begin = $( "#from" ).datepicker("getDate");
-     var end = $( "#to" ).datepicker("getDate");
-     $(".datepicker").datepicker("setDate", begin);
-   });
+      });
 
-   $( "#from" ).datepicker({
-    defaultDate: "+1w",
-    changeMonth: true,
-    numberOfMonths: 1,
-    onClose: function( selectedDate ) {
-      $( "#to" ).datepicker( "option", "minDate", selectedDate );
-    }
-  });
+      $('#from').datepicker({
+         defaultDate: '+1w',
+         changeMonth: true,
+         numberOfMonths: 1,
+         rangeSelection: 'from',
+         minDate: 0, //Pour dire que l'on peut pas réserver après aujourd'hui
+         onClose: function(selectedDate) {
+            $('#to').datepicker('option', 'minDate', selectedDate);
+            //TODO Begin selection
+            $('#to').datepicker('option', 'beginSelection', selectedDate);
+         }
+      });
 
-  $( "#to" ).datepicker({
-    defaultDate: "+1w",
-    changeMonth: true,
-    numberOfMonths: 1,
-    onClose: function( selectedDate ) {
-      $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-    }
-  });
+      $('#to').datepicker({
+         defaultDate: '+1w',
+         changeMonth: true,
+         numberOfMonths: 1,
+         rangeSelection: 'to',
+         onClose: function(selectedDate) {
+            $('#from').datepicker('option', 'maxDate', selectedDate);
+            $('#from').datepicker('option', 'endSelection', selectedDate);
+         }
+      });
 
 
-      $(function() {
-         $(".datepicker").datepicker({
-            numberOfMonths: 1
-         });
+      $('#datepicker').datepicker({
+         numberOfMonths: 1,
+         ranges: [{
+            begin: new Date('03/20/2015'),
+            end: new Date('03/23/2015'),
+            type: 'presentation'
+         }]
       });
    </script>
 </body>

@@ -8,66 +8,19 @@
    <link rel="stylesheet" href="app.css">
 </head>
 
-<body ng-app>
+<body ng-app="TestModule">
 
-   <label for="from">From</label>
-   <input type="text" id="from" name="from">
-   <label for="to">to</label>
-   <input type="text" id="to" name="to">
-   <button id="reserv">Add reservation</button>
-
-   <div id="datepicker"></div>
-
+   <div ng-controller="TestCtrl as test">
+      <datepicker from="test.from" to="test.to"></datepicker>
+      <!-- <calendar ranges="test.ranges" number-of-month="2"></calendar> -->
+      <button ng-click="test.show()">test</button>
+   </div>
 
    <script src="bower_components/jquery/dist/jquery.js"></script>
+   <script src="bower_components/jquery-ui/jquery-ui.js"></script>
    <script src="datepicker.js"></script>
    <script src="bower_components/angular/angular.js"></script>
    <script src="app.js"></script>
-   <script>
-      //Faire une réservation
-      $('#reserv').click(function() {
-         //Get begin and end of the reservation
-         var begin = $('#from').datepicker('getDate');
-         var end = $('#to').datepicker('getDate');
-         //Modify the main datepicker and add this reservation
-         $('#datepicker').datepicker('addRange', begin, end, 'reservation');
-
-      });
-
-      $('#from').datepicker({
-         defaultDate: '+1w',
-         changeMonth: true,
-         numberOfMonths: 1,
-         rangeSelection: 'from',
-         minDate: 0, //Pour dire que l'on peut pas réserver après aujourd'hui
-         onClose: function(selectedDate) {
-            $('#to').datepicker('option', 'minDate', selectedDate);
-            //TODO Begin selection
-            $('#to').datepicker('option', 'beginSelection', selectedDate);
-         }
-      });
-
-      $('#to').datepicker({
-         defaultDate: '+1w',
-         changeMonth: true,
-         numberOfMonths: 1,
-         rangeSelection: 'to',
-         onClose: function(selectedDate) {
-            $('#from').datepicker('option', 'maxDate', selectedDate);
-            $('#from').datepicker('option', 'endSelection', selectedDate);
-         }
-      });
-
-
-      $('#datepicker').datepicker({
-         numberOfMonths: 1,
-         ranges: [{
-            begin: new Date('03/20/2015'),
-            end: new Date('03/23/2015'),
-            type: 'presentation'
-         }]
-      });
-   </script>
 </body>
 
 </html>

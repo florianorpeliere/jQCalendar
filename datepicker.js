@@ -157,7 +157,6 @@
       this.dpDiv = datepicker_bindHover($("<div id='" + this._mainDivId + "' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>"));
 
       //TODO
-      this.hovered = [];
       this.lastThis = null;
    }
 
@@ -174,13 +173,50 @@
       },
 
       //TODO
-      _addRangeDatepicker: function (target, dateD, dateF, type) {
+      _getNameIfInRange: function (inst, dateTime) {
+         if (!inst.settings.ranges) {
+            return "";
+         }
+         var element;
+         for (var i = 0; i < inst.settings.ranges.length; i++) {
+            element = inst.settings.ranges[i];
+            if (dateTime === element.begin.getTime()) {
+               return " begin-" + element.type + " ";
+            }
+            else if (dateTime < element.end.getTime() && dateTime > element.begin.getTime()) {
+               return " " + element.type + " ";
+            }
+            else if (dateTime === element.end.getTime()) {
+               return " end-" + element.type + " ";
+            }
+         }
+         return "";
+      },
+
+      //TODO
+      _isInSelectedRange: function (inst, dateTime) {
+         if (!inst.settings.beginSelection || !inst.settings.endSelection) {
+            return "";
+         }
+         if (dateTime >= new Date(inst.settings.beginSelection).getTime() &&
+            dateTime <= new Date(inst.settings.endSelection).getTime()) {
+            return " ui-state-hovered ";
+         }
+         else {
+            return "";
+         }
+      },
+
+      //TODO
+      _getRangeDatepicker: function (target) {
          var inst = this._getInst(target);
-         inst.settings.ranges.push({
-            begin: new Date(dateD),
-            end: new Date(dateF),
-            type: type
-         });
+         return inst.settings.ranges;
+      },
+
+      //TODO
+      _addRangeDatepicker: function (target, range) {
+         var inst = this._getInst(target);
+         inst.settings.ranges.push(range);
          this._updateDatepicker(inst);
       },
 
@@ -204,12 +240,6 @@
             }
             else if (inst.settings.rangeSelection === "to") {
                inst.settings.endSelection = this._formatDate(inst, inst.currentDay, inst.currentMonth, inst.currentYear);
-            }
-            var dateEnd = new Date(inst.settings.endSelection);
-            var dateBegin = new Date(inst.settings.beginSelection);
-            this.hovered = [];
-            for (var d = dateBegin; d <= dateEnd; d.setDate(d.getDate() + 1)) {
-               this.hovered.push(new Date(d));
             }
             this._updateDatepicker(inst);
          }
@@ -1963,30 +1993,10 @@
                               (printDate.getTime() === today.getTime() ? " ui-state-highlight" : "") +
 
                               //TODO
-                              (inst.settings.rangeSelection && this.hovered.some(function (element) {
-                                 return printDate.getTime() === element.getTime();
-                              }) ? " ui-state-hovered " : "") +
+                              this._isInSelectedRange(inst, printDate.getTime()) +
 
                               //TODO
-                              (function () {
-                                 if (!inst.settings.ranges) {
-                                    return "";
-                                 }
-                                 var element;
-                                 for (var i = 0; i < inst.settings.ranges.length; i++) {
-                                    element = inst.settings.ranges[i];
-                                    if (printDate.getTime() === element.begin.getTime()) {
-                                       return " begin-" + element.type + " ";
-                                    }
-                                    else if (printDate.getTime() < element.end.getTime() && printDate.getTime() > element.begin.getTime()) {
-                                       return " " + element.type + " ";
-                                    }
-                                    else if (printDate.getTime() === element.end.getTime()) {
-                                       return " end-" + element.type + " ";
-                                    }
-                                 }
-                                 return "";
-                              })() +
+                              this._getNameIfInRange(inst, printDate.getTime()) +
 
                               (printDate.getTime() === currentDate.getTime() ? " ui-state-active" : "") + // highlight selected day
                               (otherMonth ? " ui-priority-secondary" : "") + // distinguish dates from other months
@@ -2273,7 +2283,7 @@
       }
 
       var otherArgs = Array.prototype.slice.call(arguments, 1);
-      if (typeof options === "string" && (options === "isDisabled" || options === "getDate" || options === "widget")) {
+      if (typeof options === "string" && (options === "isDisabled" || options === "getDate" /*TODO*/ || options === "getRange" || options === "widget")) {
          return $.datepicker["_" + options + "Datepicker"].
          apply($.datepicker, [this[0]].concat(otherArgs));
       }

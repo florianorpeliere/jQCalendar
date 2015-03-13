@@ -5,25 +5,17 @@
 .ui-widget-content .ui-state-hovered {
    background: red;
 }
-.ui-widget-content .begin-presentation {
+.ui-widget-content .begin-presentation, .ui-widget-content .end-presentation {
    background-color: blue;
    background-position: 73% 103%;
 }
 .ui-widget-content .presentation {
    background: blue;
 }
-.ui-widget-content .end-presentation {
-   background-color: blue;
-   background-position: 73% 103%;
-}
-.ui-widget-content .begin-reservation {
+.ui-widget-content .begin-reservation, .ui-widget-content .end-reservation {
    background-color: pink;
    background-position: 73% 103%;
 }
 .ui-widget-content .reservation {
    background: pink;
-}
-.ui-widget-content .end-reservation {
-   background-color: pink;
-   background-position: 73% 103%;
 }
